@@ -11,7 +11,6 @@
 
 ## Créditos:
 - Arthur Junio
-- Gabriel Graciott
 - Igor Drumond
 - João Bargas
 - Lucas Balta
