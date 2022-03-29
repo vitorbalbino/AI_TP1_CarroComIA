@@ -1,13 +1,11 @@
 # Trabalho Práico 1 - Carro com agência inteligente
 
-Conclusão: Quarta, 06/04
+## Sobre:
+- Conclusão: Quarta, 06/04
+- Disciplina Agentes Inteligentes
+- Curso Superior Tecnólogo em Jogos Digitais - PUC Minas 
 
-Disciplina Agentes Inteligentes
-
-Curso Superior Tecnólogo em Jogos Digitais - PUC Minas 
-
-## Projeto
-
+## Implementado:
 - Carro com agência inteligente para encontrar a rota mais eficiente de um percurso;
 - Modelos 3D e cenários produzidos internametne;
 
