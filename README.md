@@ -10,10 +10,10 @@
 - Modelos 3D e cenários produzidos internametne;
 
 ## Créditos:
-- Arthur Junio: Gerente de Arte, Artista de Personagens, Artista Generalista.
-- Gabriel Graciott: Programador, Game Designer
-- Igor Drumond: Programador, Game Designer
-- João Bargas: Artista, Roteirista
-- Lucas Balta: Artista, Game Designer
-- Luís Fernando: Gerente de projeto, Artista de suporte
-- Vitor Balbino: Gerente de programação, Programador
+- Arthur Junio
+- Gabriel Graciott
+- Igor Drumond
+- João Bargas
+- Lucas Balta
+- Luís Fernando
+- Vitor Balbino
