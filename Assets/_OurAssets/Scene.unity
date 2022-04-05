@@ -2573,8 +2573,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da5b5c1e848e0ac4499a765ac1db9f57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxSpeed: 10
-  CurrentSpeed: 30
+  MaxSpeed: 1
+  MaxAceleration: 5
+  CurrentSpeed: {x: 0, y: 0, z: 0}
+  Mass: 1
   OriginPoint: {x: 0, y: 0.5, z: 1.5}
   MaxRayDistance: 12
   TooCloseDistance: 1.5
