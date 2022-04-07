@@ -8,9 +8,11 @@ public class CarAgent : MonoBehaviour {
     public float MaxAceleration = 10.0f;
     public Vector3 CurrentSpeed = Vector3.zero;
     public float Mass = 1.0f;
+    [HideInInspector] public List<Vector3> Barriers = new List<Vector3>();
 
     [Header("Raycast")]
     public Vector3 OriginPoint;
+    public float OriginPointExtension = 2.0f;
     public float MaxRayDistance = 12.0f;
     public float TooCloseDistance = 1.5f;
     [Range(5, 30)] public int RayQuantitie = 11;
@@ -26,9 +28,10 @@ public class CarAgent : MonoBehaviour {
 
     void Update()// Rodando uma vez para testes
     {
-        OriginPoint = this.transform.position + (this.transform.forward * 1.5f) + (Vector3.up * 0.5f);
+        OriginPoint = this.transform.position + (this.transform.forward * OriginPointExtension) + (Vector3.up * 0.5f);
         CenterOfOpenArea = Vector3.zero;
         pointCount = 0;
+        Barriers = new List<Vector3>();
 
         // Para cada raio lançado no espaço
         for(int rayIndex = 0; rayIndex < RayQuantitie; rayIndex++) {
@@ -63,7 +66,7 @@ public class CarAgent : MonoBehaviour {
 
         // Atualizar posição
 
-        MovementHandler.Seek(this);
+        MovementHandler.Seek_Arrival(this);
     }
 }
 
@@ -87,6 +90,10 @@ public class RaycastHitHandler {
 
             car.CenterOfOpenArea += Hit.point;
             car.pointCount += 1;
+
+            if ((Hit.point - car.transform.position).magnitude <= car.TooCloseDistance) {
+                car.Barriers.Add(Hit.point);
+            }
         }
         else {
 
@@ -112,7 +119,25 @@ public static class MovementHandler {
         return value;
     }
 
-    public static void Seek(CarAgent car) {
+    public static void SlowingVelocityToward(CarAgent car, Vector3 position) {
+        float distanceMagnitude = (position - car.transform.position).magnitude;
+
+        if(distanceMagnitude <= car.TooCloseDistance) {
+
+            // Trunca a velocidade na direção do limite
+            Vector3 VelocityToOBject = Vector3.Project(car.CurrentSpeed, (position - car.transform.position));
+
+            // Preserva a velocidade perpendicular ao limite
+            Vector3 OrtogonalVelocity = car.CurrentSpeed - VelocityToOBject;
+
+            VelocityToOBject = TruncateInMagnitude(VelocityToOBject, 
+                car.MaxSpeed * (distanceMagnitude / car.TooCloseDistance) * (VelocityToOBject.magnitude / car.CurrentSpeed.magnitude) );
+
+            car.CurrentSpeed = VelocityToOBject + OrtogonalVelocity;
+        }
+    }
+
+    public static void Seek_Arrival(CarAgent car) {
         Vector3 desired_vel = (car.CenterOfOpenArea.GetHeight(car) - car.transform.position).normalized * car.MaxSpeed;
 
         Vector3 steeringForce = desired_vel - car.CurrentSpeed;
@@ -122,6 +147,16 @@ public static class MovementHandler {
         Vector3 acelleration = steeringForce / car.Mass;
 
         car.CurrentSpeed = TruncateInMagnitude(car.CurrentSpeed + acelleration, car.MaxSpeed);
+
+        // Arrival pro ponto ideal, e tenta evitar colisões {
+
+        SlowingVelocityToward(car, car.CenterOfOpenArea.GetHeight(car));
+
+        foreach(Vector3 point in car.Barriers) {
+            SlowingVelocityToward(car, point);
+        }
+
+        // }
 
         Vector3 desiredPosition = car.transform.position + car.CurrentSpeed * Time.deltaTime;
 
